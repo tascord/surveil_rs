@@ -1,0 +1,31 @@
+WHITESPACE = _{ " " }
+
+verb = {
+    "-" // Negate
+
+  | ":" // Includes, equals
+
+  | "=" // Equals
+
+  | "<=" // Less than or equal to
+
+  | ">=" // Greater than or equal to
+
+  | "<" // Less than
+
+  | ">" // Greater than
+}
+
+expression = {
+    identifier ~ verb ~ value
+}
+
+string_literal = @{ "\"" ~ (!"\"" ~ ANY)* ~ "\"" }
+number_literal = @{ ASCII_DIGIT+ ~ ("." ~ ASCII_DIGIT+)? }
+regex_literal  = @{ "/" ~ (!"/" ~ ANY)* ~ "/" }
+
+identifier = @{ (ASCII_ALPHA ~ (ASCII_ALPHANUMERIC)*) }
+value          = @{ string_literal | number_literal | regex_literal | identifier }
+
+statement = _{ expression }
+program = _{ SOI ~ (statement ~ WHITESPACE)* ~ EOI }
